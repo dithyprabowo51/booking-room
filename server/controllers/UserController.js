@@ -43,7 +43,7 @@ class UserController {
         user_role: user.user_role
       }
       const access_token = generateToken(payload)
-      res.status(200).json({ access_token })
+      res.status(200).json({ access_token, user_role: user.user_role })
     } catch (err) {
       next(err)
     }

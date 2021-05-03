@@ -28,7 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notNull: { msg: 'Minimal capacity cannot be empty' },
         notEmpty: { msg: 'Minimal capacity cannot be empty' },
-        min: { msg: 'Minimal capacity is 1' }
+        min: {
+          args: [[1]],
+          msg: 'Minimal capacity is 1'
+        }
       }
     },
     max_capacity: {

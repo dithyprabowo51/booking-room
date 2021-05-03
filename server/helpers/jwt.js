@@ -4,4 +4,14 @@ const generateToken = payload => {
   return jwt.sign(payload, 'secret')
 }
 
-module.exports = { generateToken }
+const decodedToken = token => {
+  try {
+    const decoded = jwt.verify(token, 'secret')
+    return decoded
+  } catch (err) {
+    // err
+    return false
+  }
+}
+
+module.exports = { generateToken, decodedToken }
