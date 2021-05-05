@@ -37,7 +37,8 @@ class BookingUserController {
           {
             model: Room
           }
-        ]
+        ],
+        order: [['id', 'ASC']]
       })
       res.status(200).json({ data: bookings })
     } catch (err) {

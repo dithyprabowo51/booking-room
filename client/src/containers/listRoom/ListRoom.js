@@ -3,10 +3,12 @@ import './ListRoom.css'
 
 // Components
 import AddRoom from '../../components/room/AddRoom.js'
+import EditRoom from '../../components/room/EditRoom.js'
 
 // redux
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAllRooms } from '../../redux/actions/room/fetchAllRooms.js'
+import { deleteRoom } from '../../redux/actions/room/deleteRoom.js'
 
 const ListRoom = () => {
   const dispatch = useDispatch()
@@ -14,6 +16,17 @@ const ListRoom = () => {
   const rooms = useSelector(state => state.room.rooms)
 
   const [isShowAddRoomForm, setIsShowAddRoomForm] = useState(false)
+  const [isShowEditRoomForm, setIsShowEditRoomForm] = useState(false)
+  const [roomEdit, setRoomEdit] = useState({})
+
+  const handleShowEdit = room => {
+    setRoomEdit(room)
+    setIsShowEditRoomForm(true)
+  }
+
+  const handleDeleteRoom = id => {
+    dispatch(deleteRoom({ id }))
+  }
 
   useEffect(() => {
     dispatch(fetchAllRooms())
@@ -24,15 +37,20 @@ const ListRoom = () => {
     <div className="row mt-5 justify-content-center">
       <h2 className="text-center mb-4">List Rooms</h2>
       <div className="col-7">
-        <div className="text-end mb-4">
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => setIsShowAddRoomForm(true)}
-          >
-            Add New Room
-          </button>
-        </div>
+        {
+          localStorage.getItem('user_role') === 'admin' ?
+            <div className="text-end mb-4">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => setIsShowAddRoomForm(true)}
+              >
+                Add New Room
+            </button>
+            </div>
+            :
+            null
+        }
         <table className="table text-center">
           <thead>
             <tr>
@@ -40,7 +58,12 @@ const ListRoom = () => {
               <th>Room Name</th>
               <th>Min Capacity</th>
               <th>Max Capacity</th>
-              <th>Action</th>
+              {
+                localStorage.getItem('user_role') === 'admin' ?
+                  <th>Action</th>
+                  :
+                  null
+              }
             </tr>
           </thead>
           <tbody>
@@ -51,10 +74,27 @@ const ListRoom = () => {
                   <td>{room.room_name}</td>
                   <td>{room.min_capacity}</td>
                   <td>{room.max_capacity}</td>
-                  <td>
-                    <button className="btn btn-sm btn-warning mx-1">Edit</button>
-                    <button className="btn btn-sm btn-danger mx-1">Delete</button>
-                  </td>
+                  {
+                    localStorage.getItem('user_role') === 'admin' ?
+                      <td>
+                        <button
+                          className="btn btn-sm btn-warning mx-1"
+                          type="button"
+                          onClick={() => handleShowEdit(room)}
+                        >
+                          Edit
+                      </button>
+                        <button
+                          className="btn btn-sm btn-danger mx-1"
+                          type="button"
+                          onClick={() => handleDeleteRoom(room.id)}
+                        >
+                          Delete
+                      </button>
+                      </td>
+                      :
+                      null
+                  }
                 </tr>
               ))
             }
@@ -65,6 +105,15 @@ const ListRoom = () => {
         isShowAddRoomForm ?
           <AddRoom
             setIsShowAddRoomForm={setIsShowAddRoomForm}
+          />
+          :
+          null
+      }
+      {
+        isShowEditRoomForm ?
+          <EditRoom
+            setIsShowEditRoomForm={setIsShowEditRoomForm}
+            room={roomEdit}
           />
           :
           null

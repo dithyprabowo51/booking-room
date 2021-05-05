@@ -5,3 +5,8 @@
 .link-text:hover {
   color: orange;
 }
+.logout {
+  position: absolute;
+  right: 30px;
+  top: 5px;
+}

@@ -39,7 +39,8 @@ class BookingAdminController {
             model: User,
             attributes: { exclude: ['user_password', 'createdAt', 'updatedAt'] }
           }
-        ]
+        ],
+        order: [['id', 'ASC']]
       })
       res.status(200).json({ data: bookings })
     } catch (err) {
@@ -61,10 +62,10 @@ class BookingAdminController {
   static async updateBooking(req, res, next) {
     try {
       const { id } = req.params
-      const { participants, date_booking, time_from_booking, time_to_booking } = req.body
+      const { room_id, participants, date_booking, time_from_booking, time_to_booking } = req.body
       const bookingUpdated = await Booking.update(
         {
-          participants, date_booking, time_from_booking, time_to_booking
+          room_id, participants, date_booking, time_from_booking, time_to_booking
         },
         {
           where: { id },
